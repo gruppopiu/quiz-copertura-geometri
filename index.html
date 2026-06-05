@@ -547,15 +547,23 @@
       <div class="intro-meta-item"><span class="meta-dot"></span>3 minuti</div>
       <div class="intro-meta-item"><span class="meta-dot"></span>Risultato personalizzato</div>
     </div>
-    <div class="email-block">
-      <label class="email-label" for="userEmail">Inserisci la tua email per accedere all'analisi</label>
-      <input class="email-input" type="email" id="userEmail" placeholder="nome@studio.it" autocomplete="email">
-      <div class="email-error" id="emailError">Inserisci un indirizzo email valido per continuare.</div>
-      <button class="btn-start" onclick="startQuiz()">Inizia l'analisi →</button>
-    </div>
+    <button class="btn-start" onclick="startQuiz()">Inizia l'analisi →</button>
   </div>
 
   <div id="quizContainer"></div>
+
+  <!-- EMAIL GATE -->
+  <div id="emailGate" style="display:none;">
+    <div class="fade-in">
+      <div class="question-num">Ultimo step</div>
+      <div class="question-text">Inserisci la tua email per vedere il risultato dell'analisi</div>
+      <div class="email-block">
+        <input class="email-input" type="email" id="userEmail" placeholder="nome@studio.it" autocomplete="email">
+        <div class="email-error" id="emailError">Inserisci un indirizzo email valido per continuare.</div>
+        <button class="btn-start" onclick="submitEmail()" style="margin-top:8px;">Scopri il risultato →</button>
+      </div>
+    </div>
+  </div>
 
   <div id="resultSection" style="display:none;">
     <div class="result-eyebrow">Il tuo profilo assicurativo</div>
@@ -686,8 +694,28 @@ function validateEmail(email) {
 }
 
 function startQuiz() {
-  const emailInput = document.getElementById('userEmail');
-  const emailError = document.getElementById('emailError');
+  document.getElementById('introSection').style.display = 'none';
+  document.getElementById('progressWrap').style.display = 'block';
+  renderQuestion(0);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var emailInput = document.getElementById('userEmail');
+  if (emailInput) {
+    emailInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') submitEmail();
+    });
+    emailInput.addEventListener('input', function() {
+      emailInput.style.borderColor = '';
+      emailInput.style.boxShadow = '';
+      document.getElementById('emailError').classList.remove('visible');
+    });
+  }
+});
+
+function submitEmail() {
+  var emailInput = document.getElementById('userEmail');
+  var emailError = document.getElementById('emailError');
   userEmail = emailInput.value.trim();
   if (!validateEmail(userEmail)) {
     emailError.classList.add('visible');
@@ -696,23 +724,9 @@ function startQuiz() {
     emailInput.style.boxShadow = '0 0 0 3px rgba(248,81,73,0.2)';
     return;
   }
-  emailError.classList.remove('visible');
-  document.getElementById('introSection').style.display = 'none';
-  document.getElementById('progressWrap').style.display = 'block';
-  renderQuestion(0);
+  document.getElementById('emailGate').style.display = 'none';
+  showResult();
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  const emailInput = document.getElementById('userEmail');
-  emailInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') startQuiz();
-  });
-  emailInput.addEventListener('input', () => {
-    emailInput.style.borderColor = '';
-    emailInput.style.boxShadow = '';
-    document.getElementById('emailError').classList.remove('visible');
-  });
-});
 
 function renderQuestion(index) {
   const q = questions[index];
@@ -742,8 +756,14 @@ function selectOption(questionIndex, optionIndex) {
     el.classList.toggle('selected', i === optionIndex);
   });
   setTimeout(function() {
-    if (questionIndex === questions.length - 1) showResult();
-    else renderQuestion(questionIndex + 1);
+    if (questionIndex === questions.length - 1) {
+      document.getElementById('quizContainer').innerHTML = '';
+      document.getElementById('progressWrap').style.display = 'none';
+      document.getElementById('emailGate').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      renderQuestion(questionIndex + 1);
+    }
   }, 320);
 }
 
