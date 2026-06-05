@@ -582,6 +582,25 @@
 
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://gkimkycddkdagavdgfdi.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdraW1reWNkZGtkYWdhdmRnZmRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA2NTI3MzksImV4cCI6MjA5NjIyODczOX0.1y5GSJsIvwt9QOe-Hup3jvzam25FQ5Kq5skITXFBmfc';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function saveResult(email, score, profile, flags) {
+  try {
+    await supabase.from('quiz_results').insert({
+      email: email,
+      score: score,
+      profile: profile,
+      flags: flags.join(',')
+    });
+  } catch(e) {
+    console.error('Supabase error:', e);
+  }
+}
+</script>
 <script>
 const questions = [
   { id:1, text:"Quale descrive meglio la tua attività principale?", options:[
@@ -782,6 +801,8 @@ function showResult() {
       return '<div class="gap-item"><div class="gap-icon ' + g.severity + '">' + g.icon + '</div><div><div class="gap-label">' + g.label + '</div><div class="gap-desc">' + g.desc + '</div></div></div>';
     }).join('');
   }
+
+  saveResult(userEmail, totalScore, profile.title, uniqueFlags);
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
   setTimeout(function() { fillEl.style.width = ((totalScore / 20) * 100) + '%'; }, 150);
