@@ -666,7 +666,7 @@ const questions = [
     {letter:"B",text:"Credo sia inclusa nella RC Professionale.",points:0,flags:["GAP_TUTELA"]},
     {letter:"C",text:"No.",points:0,flags:["GAP_TUTELA"]}
   ]},
-  { id:9, text:"Gestisci dati fiscali, catastali o patrimoniali dei tuoi clienti in formato digitale?", options:[
+  { id:9, text:"Gestisci e conservi dati dei tuoi clienti in formato digitale?", options:[
     {letter:"A",text:"Sì, e ho una copertura cyber o una polizza che include la responsabilità da data breach.",points:2,flags:[]},
     {letter:"B",text:"Sì, ma non ho nessuna copertura specifica per il rischio digitale.",points:0,flags:["GAP_CYBER"]},
     {letter:"C",text:"Sì, ma uso solo strumenti base senza misure di sicurezza strutturate.",points:0,flags:["GAP_CYBER"]}
@@ -686,14 +686,14 @@ const profiles = {
 };
 
 const gapDescriptions = {
-  NO_RC:         {label:"RC Professionale assente",              severity:"red",    icon:"✕", desc:"Stai esercendo senza la copertura obbligatoria per legge (DPR 137/2012). In caso di sinistro sei esposto direttamente con il tuo patrimonio personale."},
+  NO_RC:         {label:"RC Professionale assente",              severity:"red",    icon:"✕", desc:"Stai esercitando la professione senza la copertura obbligatoria per legge (DPR 137/2012). In caso di sinistro sei esposto direttamente con il tuo patrimonio personale."},
   GAP_MASSIMALE: {label:"Massimale non verificato",              severity:"yellow", icon:"⚠", desc:"Un massimale standard potrebbe essere sottodimensionato rispetto al valore reale dei tuoi incarichi. In caso di sinistro grave, la differenza è a tuo carico."},
   GAP_PERIMETRO: {label:"Perimetro di copertura non verificato", severity:"yellow", icon:"⚠", desc:"Alcune attività che svolgi potrebbero non essere esplicitamente incluse nella polizza. In caso di contestazione, la compagnia potrebbe eccepire l'esclusione."},
   GAP_FISCALE:   {label:"Estensione fiscale non verificata",     severity:"red",    icon:"✕", desc:"Svolgi attività fiscale ma non hai verificato che sia inclusa nella polizza RC. In caso di contenzioso su una dichiarazione o una successione, la copertura potrebbe non intervenire."},
   GAP_DL:        {label:"Responsabilità solidale scoperta",      severity:"red",    icon:"✕", desc:"Come Direttore Lavori potresti essere chiamato a rispondere per l'intero danno di un cantiere, anche per errori altrui (art. 2055 c.c.). Senza estensione esplicita la polizza potrebbe non coprire questa fattispecie."},
   GAP_INFORTUNI: {label:"Copertura infortuni assente o incerta", severity:"yellow", icon:"⚠", desc:"Come libero professionista non sei tutelato dall'INAIL. Un infortunio durante un sopralluogo o in cantiere si traduce direttamente in mancato reddito senza ammortizzatori."},
   GAP_TUTELA:    {label:"Spese legali di difesa scoperte",       severity:"yellow", icon:"⚠", desc:"La RC Professionale copre i danni causati a terzi, non le spese legali per la tua difesa. In caso di contenzioso, le spese legali sono interamente a tuo carico."},
-  GAP_CYBER:     {label:"Rischio cyber non coperto",             severity:"yellow", icon:"⚠", desc:"Tratti dati fiscali e patrimoniali dei tuoi clienti. Un data breach obbliga alla notifica al Garante entro 72 ore, con sanzioni fino al 4% del fatturato annuo."},
+  GAP_CYBER:     {label:"Rischio cyber non coperto",             severity:"yellow", icon:"⚠", desc:"Gestisci dati dei tuoi clienti che, in caso di violazione, ti obbligano alla notifica al Garante entro 72 ore con sanzioni fino al 4% del fatturato annuo. A questo si aggiungono i costi diretti per il ripristino dei sistemi informatici dello studio, che senza copertura specifica sono interamente a tuo carico."},
   GAP_CLAIMS:    {label:"Clausola claims made non compresa",     severity:"yellow", icon:"⚠", desc:"La clausola claims made determina quali sinistri sono coperti in base al momento della denuncia. Non conoscerla può portare a scoprire lacune al momento del rinnovo o del cambio di compagnia."}
 };
 
