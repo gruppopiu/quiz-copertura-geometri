@@ -96,17 +96,31 @@
     color: var(--accent);
   }
   .progress-bar {
-    height: 2px;
+    height: 3px;
     background: var(--line);
-    border-radius: 2px;
-    overflow: hidden;
+    border-radius: 3px;
+    overflow: visible;
+    position: relative;
   }
   .progress-fill {
     height: 100%;
-    background: var(--accent);
-    border-radius: 2px;
-    transition: width 0.4s ease;
+    border-radius: 3px;
+    transition: width 0.4s ease, box-shadow 0.4s ease;
+    background: linear-gradient(90deg, #0570FE, #38BFFF);
     box-shadow: 0 0 8px rgba(5,112,254,0.6);
+    position: relative;
+  }
+  .progress-fill::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #38BFFF;
+    box-shadow: 0 0 8px 3px rgba(56,191,255,0.8);
   }
 
   /* MAIN */
@@ -312,12 +326,12 @@
   .option-text {
     font-size: 14px;
     font-weight: 400;
-    color: var(--ink-2);
+    color: var(--ink);
     line-height: 1.5;
   }
   .option.selected .option-text {
     color: var(--ink);
-    font-weight: 500;
+    font-weight: 600;
   }
 
   /* NAV */
@@ -611,21 +625,20 @@ async function saveResult(email, score, profile, flags) {
 </script>
 <script>
 const questions = [
-  { id:1, text:"Quale descrive meglio la tua attività principale?", options:[
+  { id:1, text:"Quale tra queste opzioni descrive meglio la tua attività?", options:[
     {letter:"A",text:"Solo attività tecnica: progettazione, direzione lavori, catasto, perizie, certificazioni.",points:0,flags:["TECNICO"]},
     {letter:"B",text:"Attività tecnica e attività fiscale/tributaria: 730, IMU, successioni, bonus edilizi.",points:0,flags:["FISCALISTA"]},
     {letter:"C",text:"Prevalentemente attività fiscale con qualche incarico tecnico.",points:0,flags:["FISCALISTA"]}
   ]},
   { id:2, text:"Hai una polizza RC Professionale attiva?", options:[
-    {letter:"A",text:"Sì, attiva e rinnovata di recente.",points:2,flags:[]},
-    {letter:"B",text:"Sì, ma non la verifico da qualche anno.",points:1,flags:[]},
-    {letter:"C",text:"Non sono sicuro o non ricordo i dettagli.",points:0,flags:[]},
-    {letter:"D",text:"No.",points:0,flags:["NO_RC"]}
+    {letter:"A",text:"Sì, e ho verificato le coperture di recente.",points:2,flags:[]},
+    {letter:"B",text:"Sì, ma non la aggiorno e/o verifico da qualche anno.",points:1,flags:[]},
+    {letter:"C",text:"No, non ho una polizza RC Professionale in questo momento.",points:0,flags:["NO_RC"]}
   ]},
   { id:3, text:"Conosci il massimale della tua RC Professionale?", options:[
     {letter:"A",text:"Sì, e l'ho calibrato sul valore reale dei miei incarichi.",points:2,flags:[]},
     {letter:"B",text:"Sì, ma è quello standard proposto dall'assicuratore senza una verifica specifica.",points:1,flags:["GAP_MASSIMALE"]},
-    {letter:"C",text:"No, o non ricordo l'importo.",points:0,flags:["GAP_MASSIMALE"]}
+    {letter:"C",text:"No.",points:0,flags:["GAP_MASSIMALE"]}
   ]},
   { id:4, text:"Hai verificato che tutte le attività che svolgi siano esplicitamente incluse nel perimetro della polizza?", options:[
     {letter:"A",text:"Sì, ho letto il contratto e verificato voce per voce.",points:2,flags:[]},
@@ -633,22 +646,21 @@ const questions = [
     {letter:"C",text:'No, mi sono fidato della dicitura generica "attività del geometra".',points:0,flags:["GAP_PERIMETRO"]},
     {letter:"D",text:"Non so come verificarlo.",points:0,flags:["GAP_PERIMETRO"]}
   ]},
-  { id:5, text:"Se svolgi attività fiscale o tributaria: la tua polizza RC la copre esplicitamente?", options:[
+  { id:5, text:"Se svolgi attività fiscale o tributaria, la tua polizza RC Professionale la copre esplicitamente?", options:[
     {letter:"A",text:"Sì, è scritto esplicitamente nel contratto.",points:2,flags:[]},
     {letter:"B",text:"Credo di sì, ma non l'ho verificato nel dettaglio.",points:1,flags:["GAP_FISCALE"]},
     {letter:"C",text:"No, o non lo so.",points:0,flags:["GAP_FISCALE"]},
     {letter:"D",text:"Non svolgo attività fiscale.",points:2,flags:[]}
   ]},
-  { id:6, text:"Svolgi attività di Direttore Lavori o Coordinatore della Sicurezza in cantiere?", options:[
-    {letter:"A",text:"Sì, e la mia polizza include esplicitamente la responsabilità solidale ex art. 2055 c.c.",points:2,flags:[]},
+  { id:6, text:"Svolgi attività di Direttore Lavori in cantiere?", options:[
+    {letter:"A",text:"Sì, e la mia polizza include esplicitamente la responsabilità solidale.",points:2,flags:[]},
     {letter:"B",text:"Sì, ma non so se la polizza copre la responsabilità solidale.",points:0,flags:["GAP_DL"]},
     {letter:"C",text:"No, non svolgo queste attività.",points:2,flags:[]}
   ]},
   { id:7, text:"Hai una copertura infortuni professionale?", options:[
     {letter:"A",text:"Sì, con indennità giornaliera e invalidità permanente.",points:2,flags:[]},
     {letter:"B",text:"Sì, ma non ricordo le condizioni esatte.",points:1,flags:[]},
-    {letter:"C",text:"No.",points:0,flags:["GAP_INFORTUNI"]},
-    {letter:"D",text:"Ho una copertura infortuni inclusa in qualche pacchetto ma non so esattamente cosa copre.",points:1,flags:["GAP_INFORTUNI"]}
+    {letter:"C",text:"No.",points:0,flags:["GAP_INFORTUNI"]}
   ]},
   { id:8, text:"In caso di contenzioso con un cliente, un ente o l'Agenzia delle Entrate, hai una copertura per le spese legali di difesa?", options:[
     {letter:"A",text:"Sì, ho una polizza tutela legale dedicata.",points:2,flags:[]},
@@ -730,8 +742,18 @@ function submitEmail() {
 
 function renderQuestion(index) {
   const q = questions[index];
+  const pct = ((index + 1) / questions.length);
   document.getElementById('progressCount').textContent = (index + 1) + ' / ' + questions.length;
-  document.getElementById('progressFill').style.width = (((index + 1) / questions.length) * 100) + '%';
+  document.getElementById('progressFill').style.width = (pct * 100) + '%';
+
+  // Intensifica glow e gradiente man mano che si avanza
+  const glow1 = Math.round(8 + pct * 24);
+  const glow2 = Math.round(5 + pct * 20);
+  const alpha1 = (0.5 + pct * 0.5).toFixed(2);
+  const alpha2 = (0.6 + pct * 0.4).toFixed(2);
+  const fill = document.getElementById('progressFill');
+  fill.style.boxShadow = `0 0 ${glow1}px rgba(56,191,255,${alpha1}), 0 0 ${glow2}px rgba(5,112,254,${alpha2})`;
+  fill.style.background = `linear-gradient(90deg, #0455CC, #0570FE ${Math.round(40 + pct*20)}%, #38BFFF)`;
   const selected = answers[index];
   document.getElementById('quizContainer').innerHTML =
     '<div class="fade-in">' +
