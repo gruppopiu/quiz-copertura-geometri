@@ -586,11 +586,11 @@
 <script>
 const SUPABASE_URL = 'https://gkimkycddkdagavdgfdi.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdraW1reWNkZGtkYWdhdmRnZmRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA2NTI3MzksImV4cCI6MjA5NjIyODczOX0.1y5GSJsIvwt9QOe-Hup3jvzam25FQ5Kq5skITXFBmfc';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function saveResult(email, score, profile, flags) {
   try {
-    await supabase.from('quiz_results').insert({
+    await dbClient.from('quiz_results').insert({
       email: email,
       score: score,
       profile: profile,
